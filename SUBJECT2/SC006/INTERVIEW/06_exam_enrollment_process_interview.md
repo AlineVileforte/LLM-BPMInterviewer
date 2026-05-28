@@ -1,0 +1,120 @@
+# SBMN Interview Report
+
+## Process Information
+
+**Process Name:** Exam Enrollment Process\
+**Domain:** Academic
+
+## Activities
+
+1.  ACCESS ESSE3
+2.  ENTER LOGIN
+3.  ENTER PASSWORD
+4.  PRESS CONFIRM
+5.  CLICK THE "EXAMS" ITEM
+6.  CLICK THE "EXAM SESSIONS" ITEM
+7.  CHOOSE THE COURSE
+8.  PRESS CONFIRM 3 TIMES WITHOUT READING WHAT IS WRITTEN
+9.  PRINT THE ENROLLMENT CONFIRMATION
+10. END ENROLLMENT
+11. HOPE FOR A GOOD OUTCOME
+12. ENROLL IN ANOTHER EXAM
+
+## Number of Questions Asked
+
+Total interview questions: 20
+
+## Final SBMN Relations
+
+### DEP
+
+-   ENTER LOGIN DEP ACCESS ESSE3
+-   ENTER PASSWORD DEP ACCESS ESSE3
+-   PRESS CONFIRM DEP ENTER LOGIN
+-   PRESS CONFIRM DEP ENTER PASSWORD
+-   CLICK THE "EXAMS" ITEM DEP PRESS CONFIRM
+-   CLICK THE "EXAM SESSIONS" ITEM DEP CLICK THE "EXAMS" ITEM
+-   CHOOSE THE COURSE DEP CLICK THE "EXAM SESSIONS" ITEM
+-   PRESS CONFIRM 3 TIMES WITHOUT READING WHAT IS WRITTEN DEP CHOOSE THE
+    COURSE
+
+### REQ
+
+-   PRINT THE ENROLLMENT CONFIRMATION REQ PRESS CONFIRM 3 TIMES WITHOUT
+    READING WHAT IS WRITTEN
+-   END ENROLLMENT REQ PRESS CONFIRM 3 TIMES WITHOUT READING WHAT IS
+    WRITTEN
+-   ENROLL IN ANOTHER EXAM REQ HOPE FOR A GOOD OUTCOME
+
+### DEPC
+
+-   HOPE FOR A GOOD OUTCOME DEPC END ENROLLMENT
+-   HOPE FOR A GOOD OUTCOME DEPC PRINT THE ENROLLMENT CONFIRMATION
+
+### JMP
+
+-   ENROLL IN ANOTHER EXAM JMP CHOOSE THE COURSE
+
+------------------------------------------------------------------------
+
+# Complete Interview Trace
+
+Q1: Can ENTER LOGIN occur only after ACCESS ESSE3 has occurred? A: No
+(clarified later)
+
+Correction: ENTER LOGIN DEP ACCESS ESSE3
+
+Q2: Can PRESS CONFIRM occur only after ENTER LOGIN and ENTER PASSWORD?
+A: Yes
+
+Q3: Are there valid executions where ENTER LOGIN and ENTER PASSWORD
+occur but PRESS CONFIRM does not occur? A: No
+
+Q4: Can CLICK THE "EXAMS" ITEM occur only after PRESS CONFIRM? A: Yes
+
+Q5: Are there valid executions where PRESS CONFIRM occurs but CLICK THE
+"EXAMS" ITEM does not occur? A: No
+
+Q6: Can CLICK THE "EXAM SESSIONS" ITEM occur only after CLICK THE
+"EXAMS" ITEM? A: Yes
+
+Q7: Are there valid executions where CLICK THE "EXAMS" ITEM occurs but
+CLICK THE "EXAM SESSIONS" ITEM does not occur? A: No
+
+Q8: Can CHOOSE THE COURSE occur only after CLICK THE "EXAM SESSIONS"
+ITEM? A: Yes
+
+Q9: Are there valid executions where CLICK THE "EXAM SESSIONS" ITEM
+occurs but CHOOSE THE COURSE does not occur? A: No
+
+Q10: Can PRESS CONFIRM 3 TIMES WITHOUT READING WHAT IS WRITTEN occur
+only after CHOOSE THE COURSE? A: Yes
+
+Q11: Are there valid executions where CHOOSE THE COURSE occurs but PRESS
+CONFIRM 3 TIMES WITHOUT READING WHAT IS WRITTEN does not occur? A: No
+
+Q12: Can PRINT THE ENROLLMENT CONFIRMATION occur only after PRESS
+CONFIRM 3 TIMES WITHOUT READING WHAT IS WRITTEN? A: Yes
+
+Q13: Are there valid executions where PRESS CONFIRM 3 TIMES WITHOUT
+READING WHAT IS WRITTEN occurs but PRINT THE ENROLLMENT CONFIRMATION
+does not occur? A: Yes
+
+Q14: Can END ENROLLMENT occur only after PRESS CONFIRM 3 TIMES WITHOUT
+READING WHAT IS WRITTEN? A: Yes
+
+Q15: Can HOPE FOR A GOOD OUTCOME occur after END ENROLLMENT or PRINT THE
+ENROLLMENT CONFIRMATION? A: One alone is sufficient
+
+Q16: Can ENROLL IN ANOTHER EXAM occur only after HOPE FOR A GOOD
+OUTCOME? A: Yes
+
+Q17: Can ENROLL IN ANOTHER EXAM return to an earlier activity? A: Yes,
+returns to CHOOSE THE COURSE
+
+------------------------------------------------------------------------
+
+## Final Statement
+
+This SBMN model is consistent and has at least one valid BPMN
+realization.
