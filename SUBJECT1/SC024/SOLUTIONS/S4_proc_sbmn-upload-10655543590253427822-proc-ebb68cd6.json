@@ -1,0 +1,259 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "CCIL1"
+      ]
+    },
+    {
+      "id": "CCIL1",
+      "name": "Check current inventory level",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "POS1"
+      ]
+    },
+    {
+      "id": "POS1",
+      "name": "Place order with suppliers",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "CCIL1"
+      ],
+      "outComing": [
+        "UIS1"
+      ]
+    },
+    {
+      "id": "UIS1",
+      "name": "Update inventory system with expected delivery dates",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "POS1"
+      ],
+      "outComing": [
+        "Par3"
+      ]
+    },
+    {
+      "id": "Par3",
+      "name": "PAR",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "UIS1"
+      ],
+      "outComing": [
+        "RS1",
+        "G2"
+      ]
+    },
+    {
+      "id": "RS1",
+      "name": "Receive stock",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "Par3"
+      ],
+      "outComing": [
+        "RSS1"
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "G2",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.1.2.",
+      "inComing": [
+        "Par3"
+      ],
+      "outComing": [
+        "SAA1",
+        "SMA1"
+      ]
+    },
+    {
+      "id": "SAA1",
+      "name": "Send an automated alert",
+      "type": "TASK",
+      "branch": "0.0.1.2.1.1.",
+      "inComing": [
+        "G2"
+      ],
+      "outComing": [
+        "XORCLOSE9"
+      ]
+    },
+    {
+      "id": "SMA1",
+      "name": "Send a manual alert",
+      "type": "TASK",
+      "branch": "0.0.1.2.1.2.",
+      "inComing": [
+        "G2"
+      ],
+      "outComing": [
+        "XORCLOSE9"
+      ]
+    },
+    {
+      "id": "RSS1",
+      "name": "Record stock in system",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "RS1"
+      ],
+      "outComing": [
+        "ISQ1"
+      ]
+    },
+    {
+      "id": "XORCLOSE9",
+      "name": "XORCLOSE9",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.1.2.1.1.",
+      "inComing": [
+        "SAA1",
+        "SMA1"
+      ],
+      "outComing": [
+        "PARCLOSE11"
+      ]
+    },
+    {
+      "id": "ISQ1",
+      "name": "Inspect stock for quality",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "RSS1"
+      ],
+      "outComing": [
+        "PARCLOSE11"
+      ]
+    },
+    {
+      "id": "PARCLOSE11",
+      "name": "PARCLOSE11",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "ISQ1",
+        "XORCLOSE9"
+      ],
+      "outComing": [
+        "Par12"
+      ]
+    },
+    {
+      "id": "Par12",
+      "name": "PAR",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "PARCLOSE11"
+      ],
+      "outComing": [
+        "UIL1",
+        "G4"
+      ]
+    },
+    {
+      "id": "UIL1",
+      "name": "Update inventory levels",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "Par12"
+      ],
+      "outComing": [
+        "PARCLOSE18"
+      ]
+    },
+    {
+      "id": "G4",
+      "name": "G4",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.1.2.",
+      "inComing": [
+        "Par12"
+      ],
+      "outComing": [
+        "PSOS1",
+        "PSIS1"
+      ]
+    },
+    {
+      "id": "PSOS1",
+      "name": "Place stock on shelves",
+      "type": "TASK",
+      "branch": "0.0.1.2.1.1.",
+      "inComing": [
+        "G4"
+      ],
+      "outComing": [
+        "XORCLOSE17"
+      ]
+    },
+    {
+      "id": "PSIS1",
+      "name": "Place stock in storage",
+      "type": "TASK",
+      "branch": "0.0.1.2.1.2.",
+      "inComing": [
+        "G4"
+      ],
+      "outComing": [
+        "XORCLOSE17"
+      ]
+    },
+    {
+      "id": "XORCLOSE17",
+      "name": "XORCLOSE17",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.1.2.1.1.",
+      "inComing": [
+        "PSOS1",
+        "PSIS1"
+      ],
+      "outComing": [
+        "PARCLOSE18"
+      ]
+    },
+    {
+      "id": "PARCLOSE18",
+      "name": "PARCLOSE18",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "UIL1",
+        "XORCLOSE17"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "PARCLOSE18"
+      ],
+      "outComing": []
+    }
+  ]
+}
