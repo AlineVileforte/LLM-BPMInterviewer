@@ -1,0 +1,273 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "CI1"
+      ]
+    },
+    {
+      "id": "CI1",
+      "name": "Check Inventory",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "G0"
+      ]
+    },
+    {
+      "id": "G0",
+      "name": "G0",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "CI1"
+      ],
+      "outComing": [
+        "XORCLOSE19",
+        "XOR_JMPBB_RPO1_CPO1"
+      ]
+    },
+    {
+      "id": "CPO1",
+      "name": "Construct Purchase Order",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "XOR_JMPBB_RPO1_CPO1"
+      ],
+      "outComing": [
+        "RPO1"
+      ]
+    },
+    {
+      "id": "RPO1",
+      "name": "Review PurchaseOrder",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "CPO1"
+      ],
+      "outComing": [
+        "XOR_JMPAA_RPO1_CPO1"
+      ]
+    },
+    {
+      "id": "G1",
+      "name": "G1",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "XOR_JMPAA_RPO1_CPO1"
+      ],
+      "outComing": [
+        "SPT1",
+        "XORCLOSE18"
+      ]
+    },
+    {
+      "id": "SPT1",
+      "name": "Send PurchaseOrder toSupplier",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.",
+      "inComing": [
+        "G1"
+      ],
+      "outComing": [
+        "Par8"
+      ]
+    },
+    {
+      "id": "Par8",
+      "name": "PAR",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.0.1.0.1.",
+      "inComing": [
+        "SPT1"
+      ],
+      "outComing": [
+        "MO1",
+        "RF1"
+      ]
+    },
+    {
+      "id": "MO1",
+      "name": "Match Order",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.1.1.",
+      "inComing": [
+        "Par8"
+      ],
+      "outComing": [
+        "G2"
+      ]
+    },
+    {
+      "id": "RF1",
+      "name": "Reserve Fund",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.1.2.",
+      "inComing": [
+        "Par8"
+      ],
+      "outComing": [
+        "PARCLOSE15"
+      ]
+    },
+    {
+      "id": "G2",
+      "name": "G2",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.0.1.1.1.",
+      "inComing": [
+        "MO1"
+      ],
+      "outComing": [
+        "SPK1",
+        "SI1"
+      ]
+    },
+    {
+      "id": "SPK1",
+      "name": "Send packingslip",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.1.1.1.1.",
+      "inComing": [
+        "G2"
+      ],
+      "outComing": [
+        "XORCLOSE14"
+      ]
+    },
+    {
+      "id": "SI1",
+      "name": "Send Invoice",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.1.1.1.2.",
+      "inComing": [
+        "G2"
+      ],
+      "outComing": [
+        "XORCLOSE14"
+      ]
+    },
+    {
+      "id": "XORCLOSE14",
+      "name": "XORCLOSE14",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.0.1.1.1.1.1.",
+      "inComing": [
+        "SPK1",
+        "SI1"
+      ],
+      "outComing": [
+        "PARCLOSE15"
+      ]
+    },
+    {
+      "id": "PARCLOSE15",
+      "name": "PARCLOSE15",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.0.1.0.1.1.2.",
+      "inComing": [
+        "RF1",
+        "XORCLOSE14"
+      ],
+      "outComing": [
+        "RC1"
+      ]
+    },
+    {
+      "id": "RC1",
+      "name": "Receive Confirmation",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.",
+      "inComing": [
+        "PARCLOSE15"
+      ],
+      "outComing": [
+        "RLF1"
+      ]
+    },
+    {
+      "id": "RLF1",
+      "name": "Release Funds",
+      "type": "TASK",
+      "branch": "0.0.0.1.0.1.",
+      "inComing": [
+        "RC1"
+      ],
+      "outComing": [
+        "XORCLOSE18"
+      ]
+    },
+    {
+      "id": "XORCLOSE18",
+      "name": "XORCLOSE18",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.0.2.",
+      "inComing": [
+        "RLF1",
+        "G1"
+      ],
+      "outComing": [
+        "XORCLOSE19"
+      ]
+    },
+    {
+      "id": "XORCLOSE19",
+      "name": "XORCLOSE19",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XORCLOSE18",
+        "G0"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XORCLOSE19"
+      ],
+      "outComing": []
+    },
+    {
+      "id": "XOR_JMPAA_RPO1_CPO1",
+      "name": "XOR_JMPAA_Review PurchaseOrder",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "RPO1"
+      ],
+      "outComing": [
+        "G1",
+        "XOR_JMPBB_RPO1_CPO1"
+      ]
+    },
+    {
+      "id": "XOR_JMPBB_RPO1_CPO1",
+      "name": "XOR_JMPBB_Construct Purchase Order",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "G0",
+        "XOR_JMPAA_RPO1_CPO1"
+      ],
+      "outComing": [
+        "CPO1"
+      ]
+    }
+  ]
+}
