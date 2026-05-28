@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="definitions_b3130eab-cf42-45b6-b6ac-30df44b8f0a3" targetNamespace="http://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="process">
+    <startEvent id="Default_init" name="Default_init">
+      <outgoing>Default_init-IINP1</outgoing>
+    </startEvent>
+    <task id="IINP1" name="Identify idea for new product or improvement">
+      <incoming>Default_init-IINP1</incoming>
+      <outgoing>IINP1-Par1</outgoing>
+    </task>
+    <parallelGateway id="Par1" name="PAR">
+      <incoming>IINP1-Par1</incoming>
+      <outgoing>Par1-CIR1</outgoing>
+      <outgoing>Par1-CFS1</outgoing>
+    </parallelGateway>
+    <task id="CIR1" name="Conduct initial research">
+      <incoming>Par1-CIR1</incoming>
+      <outgoing>CIR1-PARCLOSE4</outgoing>
+    </task>
+    <task id="CFS1" name="Conduct feasibility studies">
+      <incoming>Par1-CFS1</incoming>
+      <outgoing>CFS1-PARCLOSE4</outgoing>
+    </task>
+    <parallelGateway id="PARCLOSE4" name="PARCLOSE4">
+      <incoming>CIR1-PARCLOSE4</incoming>
+      <incoming>CFS1-PARCLOSE4</incoming>
+      <outgoing>PARCLOSE4-DDC1</outgoing>
+    </parallelGateway>
+    <task id="DDC1" name="Draft design concepts">
+      <incoming>PARCLOSE4-DDC1</incoming>
+      <outgoing>DDC1-SPD1</outgoing>
+    </task>
+    <task id="SPD1" name="Select promising design">
+      <incoming>DDC1-SPD1</incoming>
+      <outgoing>SPD1-BP1</outgoing>
+    </task>
+    <task id="BP1" name="Build prototype">
+      <incoming>SPD1-BP1</incoming>
+      <outgoing>BP1-XOR_JMPBB_RP1_TS1</outgoing>
+    </task>
+    <task id="TS1" name="Test safety">
+      <incoming>XOR_JMPBB_RP1_TS1-TS1</incoming>
+      <outgoing>TS1-XOR_JMPBB_RP1_TF1</outgoing>
+    </task>
+    <task id="TF1" name="Test functionality">
+      <incoming>XOR_JMPBB_RP1_TF1-TF1</incoming>
+      <outgoing>TF1-XOR_JMPBB_RP1_TMP1</outgoing>
+    </task>
+    <task id="TMP1" name="Test market potential">
+      <incoming>XOR_JMPBB_RP1_TMP1-TMP1</incoming>
+      <outgoing>TMP1-CFTP1</outgoing>
+    </task>
+    <task id="CFTP1" name="Collect feedback from testing phase">
+      <incoming>TMP1-CFTP1</incoming>
+      <outgoing>CFTP1-G0</outgoing>
+    </task>
+    <exclusiveGateway id="G0" name="G0">
+      <incoming>CFTP1-G0</incoming>
+      <outgoing>G0-RP1</outgoing>
+      <outgoing>G0-G1</outgoing>
+    </exclusiveGateway>
+    <task id="RP1" name="Refine prototype">
+      <incoming>G0-RP1</incoming>
+      <outgoing>RP1-XOR_JMPAA_RP1</outgoing>
+    </task>
+    <exclusiveGateway id="G1" name="G1">
+      <incoming>G0-G1</incoming>
+      <outgoing>G1-APFD1</outgoing>
+      <outgoing>G1-DP1</outgoing>
+    </exclusiveGateway>
+    <task id="APFD1" name="Approve prototype for further development">
+      <incoming>G1-APFD1</incoming>
+      <outgoing>APFD1-XORCLOSE17</outgoing>
+    </task>
+    <task id="DP1" name="Discard prototype">
+      <incoming>G1-DP1</incoming>
+      <outgoing>DP1-XORCLOSE17</outgoing>
+    </task>
+    <exclusiveGateway id="XORCLOSE17" name="XORCLOSE17">
+      <incoming>APFD1-XORCLOSE17</incoming>
+      <incoming>DP1-XORCLOSE17</incoming>
+      <outgoing>XORCLOSE17-XORCLOSE18</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="XORCLOSE18" name="XORCLOSE18">
+      <incoming>XORCLOSE17-XORCLOSE18</incoming>
+      <incoming>XOR_JMPAA_RP1-XORCLOSE18</incoming>
+      <outgoing>XORCLOSE18-END</outgoing>
+    </exclusiveGateway>
+    <endEvent id="END" name="END_EVENT">
+      <incoming>XORCLOSE18-END</incoming>
+    </endEvent>
+    <exclusiveGateway id="XOR_JMPAA_RP1" name="XOR_JMPAA_Refine prototype">
+      <incoming>RP1-XOR_JMPAA_RP1</incoming>
+      <outgoing>XOR_JMPAA_RP1-XORCLOSE18</outgoing>
+      <outgoing>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TF1</outgoing>
+      <outgoing>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TS1</outgoing>
+      <outgoing>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TMP1</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="XOR_JMPBB_RP1_TF1" name="XOR_JMPBB_Test functionality">
+      <incoming>TS1-XOR_JMPBB_RP1_TF1</incoming>
+      <incoming>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TF1</incoming>
+      <outgoing>XOR_JMPBB_RP1_TF1-TF1</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="XOR_JMPBB_RP1_TS1" name="XOR_JMPBB_Test safety">
+      <incoming>BP1-XOR_JMPBB_RP1_TS1</incoming>
+      <incoming>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TS1</incoming>
+      <outgoing>XOR_JMPBB_RP1_TS1-TS1</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="XOR_JMPBB_RP1_TMP1" name="XOR_JMPBB_Test market potential">
+      <incoming>TF1-XOR_JMPBB_RP1_TMP1</incoming>
+      <incoming>XOR_JMPAA_RP1-XOR_JMPBB_RP1_TMP1</incoming>
+      <outgoing>XOR_JMPBB_RP1_TMP1-TMP1</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Default_init-IINP1" sourceRef="Default_init" targetRef="IINP1"/>
+    <sequenceFlow id="IINP1-Par1" sourceRef="IINP1" targetRef="Par1"/>
+    <sequenceFlow id="Par1-CIR1" sourceRef="Par1" targetRef="CIR1"/>
+    <sequenceFlow id="Par1-CFS1" sourceRef="Par1" targetRef="CFS1"/>
+    <sequenceFlow id="CIR1-PARCLOSE4" sourceRef="CIR1" targetRef="PARCLOSE4"/>
+    <sequenceFlow id="CFS1-PARCLOSE4" sourceRef="CFS1" targetRef="PARCLOSE4"/>
+    <sequenceFlow id="PARCLOSE4-DDC1" sourceRef="PARCLOSE4" targetRef="DDC1"/>
+    <sequenceFlow id="DDC1-SPD1" sourceRef="DDC1" targetRef="SPD1"/>
+    <sequenceFlow id="SPD1-BP1" sourceRef="SPD1" targetRef="BP1"/>
+    <sequenceFlow id="BP1-XOR_JMPBB_RP1_TS1" sourceRef="BP1" targetRef="XOR_JMPBB_RP1_TS1"/>
+    <sequenceFlow id="TS1-XOR_JMPBB_RP1_TF1" sourceRef="TS1" targetRef="XOR_JMPBB_RP1_TF1"/>
+    <sequenceFlow id="TF1-XOR_JMPBB_RP1_TMP1" sourceRef="TF1" targetRef="XOR_JMPBB_RP1_TMP1"/>
+    <sequenceFlow id="TMP1-CFTP1" sourceRef="TMP1" targetRef="CFTP1"/>
+    <sequenceFlow id="CFTP1-G0" sourceRef="CFTP1" targetRef="G0"/>
+    <sequenceFlow id="G0-RP1" sourceRef="G0" targetRef="RP1"/>
+    <sequenceFlow id="G0-G1" sourceRef="G0" targetRef="G1"/>
+    <sequenceFlow id="RP1-XOR_JMPAA_RP1" sourceRef="RP1" targetRef="XOR_JMPAA_RP1"/>
+    <sequenceFlow id="G1-APFD1" sourceRef="G1" targetRef="APFD1"/>
+    <sequenceFlow id="G1-DP1" sourceRef="G1" targetRef="DP1"/>
+    <sequenceFlow id="APFD1-XORCLOSE17" sourceRef="APFD1" targetRef="XORCLOSE17"/>
+    <sequenceFlow id="DP1-XORCLOSE17" sourceRef="DP1" targetRef="XORCLOSE17"/>
+    <sequenceFlow id="XORCLOSE17-XORCLOSE18" sourceRef="XORCLOSE17" targetRef="XORCLOSE18"/>
+    <sequenceFlow id="XORCLOSE18-END" sourceRef="XORCLOSE18" targetRef="END"/>
+    <sequenceFlow id="XOR_JMPAA_RP1-XORCLOSE18" sourceRef="XOR_JMPAA_RP1" targetRef="XORCLOSE18"/>
+    <sequenceFlow id="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TF1" sourceRef="XOR_JMPAA_RP1" targetRef="XOR_JMPBB_RP1_TF1"/>
+    <sequenceFlow id="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TS1" sourceRef="XOR_JMPAA_RP1" targetRef="XOR_JMPBB_RP1_TS1"/>
+    <sequenceFlow id="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TMP1" sourceRef="XOR_JMPAA_RP1" targetRef="XOR_JMPBB_RP1_TMP1"/>
+    <sequenceFlow id="XOR_JMPBB_RP1_TF1-TF1" sourceRef="XOR_JMPBB_RP1_TF1" targetRef="TF1"/>
+    <sequenceFlow id="XOR_JMPBB_RP1_TS1-TS1" sourceRef="XOR_JMPBB_RP1_TS1" targetRef="TS1"/>
+    <sequenceFlow id="XOR_JMPBB_RP1_TMP1-TMP1" sourceRef="XOR_JMPBB_RP1_TMP1" targetRef="TMP1"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_39323130-ade2-41fe-a200-c1ecf3a5e56e">
+    <bpmndi:BPMNPlane bpmnElement="process" id="BPMNPlane_c997d763-7900-48ea-85aa-1e98f560f5d0">
+      <bpmndi:BPMNShape bpmnElement="Default_init" id="BPMNShape_74eb9b2c-336d-4763-b179-9d6fe59c0c5a">
+        <dc:Bounds height="36.0" width="36.0" x="120.0" y="360.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="IINP1" id="BPMNShape_3c864b6b-ef63-41b7-a7c2-ef3fd023eba0">
+        <dc:Bounds height="80.0" width="100.0" x="320.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2a222877-9687-4c7d-8ee8-4d4de09cc6f2">
+          <dc:Bounds height="24.0" width="100.0" x="320.0" y="488.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Par1" id="BPMNShape_f4061e88-56ef-43d2-94b6-87777a5be02d">
+        <dc:Bounds height="50.0" width="50.0" x="600.0" y="560.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CIR1" id="BPMNShape_2d49a16b-690c-4a9e-a29b-d45179e55ce4">
+        <dc:Bounds height="80.0" width="100.0" x="820.0" y="540.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_ee7ee1a9-e525-483f-98a4-3af2e7affa04">
+          <dc:Bounds height="24.0" width="100.0" x="820.0" y="628.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CFS1" id="BPMNShape_1ae71254-0093-4992-894a-196675dbf0a7">
+        <dc:Bounds height="80.0" width="100.0" x="820.0" y="700.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_8c72988d-54d1-4ecb-9fc8-21771bd6b001">
+          <dc:Bounds height="24.0" width="100.0" x="820.0" y="788.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="PARCLOSE4" id="BPMNShape_54cd2d2b-25fd-4903-a82f-87cc24b6f2c0">
+        <dc:Bounds height="50.0" width="50.0" x="1080.0" y="580.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DDC1" id="BPMNShape_9c12091e-c6d2-40d4-b5ff-67f82a51b568">
+        <dc:Bounds height="80.0" width="100.0" x="1300.0" y="480.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_91b1e7f6-8ca4-4001-9a52-2a5b29bc7a44">
+          <dc:Bounds height="24.0" width="100.0" x="1300.0" y="568.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SPD1" id="BPMNShape_5fe8d771-c446-40b3-81bf-a9c5a65cd8b3">
+        <dc:Bounds height="80.0" width="100.0" x="1580.0" y="440.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_56b7dea9-f6f8-4a58-95a4-155cc6c90f86">
+          <dc:Bounds height="24.0" width="100.0" x="1580.0" y="528.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="BP1" id="BPMNShape_b29a4747-0d32-4371-b08d-ba91cad9525d">
+        <dc:Bounds height="80.0" width="100.0" x="1840.0" y="380.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9bde3e07-dcb0-4d72-a570-6babbb5d230e">
+          <dc:Bounds height="24.0" width="100.0" x="1840.0" y="468.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TS1" id="BPMNShape_a9309145-7754-45d5-8e63-b57ddd4186c7">
+        <dc:Bounds height="80.0" width="100.0" x="2340.0" y="400.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9901ba90-9a12-4b87-83cb-2d91d6e03822">
+          <dc:Bounds height="24.0" width="100.0" x="2340.0" y="488.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TF1" id="BPMNShape_c78fbe96-e3ea-42b6-81fb-65ceee301916">
+        <dc:Bounds height="80.0" width="100.0" x="2820.0" y="360.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_edf5d61c-7a94-49f1-96ca-0532bc903ad3">
+          <dc:Bounds height="24.0" width="100.0" x="2820.0" y="448.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TMP1" id="BPMNShape_4934f0b9-2704-414d-a71c-2ac8012bd457">
+        <dc:Bounds height="80.0" width="100.0" x="3320.0" y="340.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_57fbe042-a2aa-47cb-859a-c60ea5cfb9df">
+          <dc:Bounds height="24.0" width="100.0" x="3320.0" y="428.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CFTP1" id="BPMNShape_259c9bd4-e9e0-45a0-82de-daa1cd2ae56b">
+        <dc:Bounds height="80.0" width="100.0" x="3580.0" y="380.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4b54d02a-2211-4707-8036-774e16b01014">
+          <dc:Bounds height="24.0" width="100.0" x="3580.0" y="468.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G0" id="BPMNShape_56f42578-c8d3-4411-90ee-955d715c571a">
+        <dc:Bounds height="50.0" width="50.0" x="3860.0" y="560.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="RP1" id="BPMNShape_41ad874a-2857-4657-b551-32eda218e8d3">
+        <dc:Bounds height="80.0" width="100.0" x="4080.0" y="540.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_9c3712cf-a0c0-4a1a-a173-626a82114a7a">
+          <dc:Bounds height="24.0" width="100.0" x="4080.0" y="628.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="G1" id="BPMNShape_97193e76-b730-47ce-a27d-6d2c918f92e5">
+        <dc:Bounds height="50.0" width="50.0" x="4080.0" y="760.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="APFD1" id="BPMNShape_6ca29721-bdff-4165-b047-5d764c04513e">
+        <dc:Bounds height="80.0" width="100.0" x="4340.0" y="760.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_bf69e371-12e2-4dcb-8a5a-d2568a6079e6">
+          <dc:Bounds height="24.0" width="100.0" x="4340.0" y="848.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DP1" id="BPMNShape_945610ac-2df8-4e39-b08e-1e3048345e4f">
+        <dc:Bounds height="80.0" width="100.0" x="4340.0" y="920.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_6daa68e4-efe3-4810-a192-b9fa85ef1cb6">
+          <dc:Bounds height="24.0" width="100.0" x="4340.0" y="1008.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XORCLOSE17" id="BPMNShape_ac4ec964-c81c-4553-908b-6900d2c1ed02">
+        <dc:Bounds height="50.0" width="50.0" x="4620.0" y="780.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XORCLOSE18" id="BPMNShape_cf3b6340-a190-4d5c-a22e-8b3aa1a5310e">
+        <dc:Bounds height="50.0" width="50.0" x="4620.0" y="640.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="END" id="BPMNShape_cf5533b3-7d9f-4c17-abf0-ecd467597b57">
+        <dc:Bounds height="36.0" width="36.0" x="4840.0" y="620.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XOR_JMPAA_RP1" id="BPMNShape_c640c3c2-9a28-4bbb-a597-65e25d4511ec">
+        <dc:Bounds height="50.0" width="50.0" x="4340.0" y="600.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XOR_JMPBB_RP1_TF1" id="BPMNShape_3acf6588-cd0b-4596-86e7-c15dfcba1a1d">
+        <dc:Bounds height="50.0" width="50.0" x="2600.0" y="460.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XOR_JMPBB_RP1_TS1" id="BPMNShape_444b6bf6-ea0a-4765-afc9-a48c1b141169">
+        <dc:Bounds height="50.0" width="50.0" x="2120.0" y="480.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="XOR_JMPBB_RP1_TMP1" id="BPMNShape_3bad611a-9082-403e-9eb0-efcc54728190">
+        <dc:Bounds height="50.0" width="50.0" x="3100.0" y="440.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Default_init-IINP1" id="BPMNEdge_ad945b78-13e7-4288-9ed8-1afbd3618d84">
+        <di:waypoint x="156.0" y="380.0"/>
+        <di:waypoint x="220.0" y="380.0"/>
+        <di:waypoint x="220.0" y="440.0"/>
+        <di:waypoint x="320.0" y="440.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="IINP1-Par1" id="BPMNEdge_e516b9bf-c33d-4317-a324-a463f510311f">
+        <di:waypoint x="420.0" y="440.0"/>
+        <di:waypoint x="500.0" y="440.0"/>
+        <di:waypoint x="500.0" y="580.0"/>
+        <di:waypoint x="600.0" y="580.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Par1-CIR1" id="BPMNEdge_d1f5ef58-7515-4b6c-9768-8f403864d660">
+        <di:waypoint x="650.0" y="580.0"/>
+        <di:waypoint x="820.0" y="580.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Par1-CFS1" id="BPMNEdge_45574743-94ab-4cf0-a30b-dbeeb04f4f2d">
+        <di:waypoint x="650.0" y="600.0"/>
+        <di:waypoint x="740.0" y="600.0"/>
+        <di:waypoint x="740.0" y="740.0"/>
+        <di:waypoint x="820.0" y="740.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="CIR1-PARCLOSE4" id="BPMNEdge_9200a46d-f350-4f9d-83a7-fa33f099634d">
+        <di:waypoint x="920.0" y="580.0"/>
+        <di:waypoint x="1000.0" y="580.0"/>
+        <di:waypoint x="1000.0" y="600.0"/>
+        <di:waypoint x="1080.0" y="600.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="CFS1-PARCLOSE4" id="BPMNEdge_173bba4b-b0fe-4366-b2ff-9014916326cb">
+        <di:waypoint x="920.0" y="740.0"/>
+        <di:waypoint x="1000.0" y="740.0"/>
+        <di:waypoint x="1000.0" y="620.0"/>
+        <di:waypoint x="1080.0" y="620.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="PARCLOSE4-DDC1" id="BPMNEdge_6a8d8304-fbf0-4490-9e97-836055cc4856">
+        <di:waypoint x="1130.0" y="600.0"/>
+        <di:waypoint x="1200.0" y="600.0"/>
+        <di:waypoint x="1200.0" y="520.0"/>
+        <di:waypoint x="1300.0" y="520.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="DDC1-SPD1" id="BPMNEdge_5e310d33-ab36-4bde-a210-07918f49435e">
+        <di:waypoint x="1400.0" y="520.0"/>
+        <di:waypoint x="1480.0" y="520.0"/>
+        <di:waypoint x="1480.0" y="480.0"/>
+        <di:waypoint x="1580.0" y="480.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SPD1-BP1" id="BPMNEdge_f1c85fc8-8c40-4973-acea-29f246f21fcf">
+        <di:waypoint x="1680.0" y="480.0"/>
+        <di:waypoint x="1760.0" y="480.0"/>
+        <di:waypoint x="1760.0" y="420.0"/>
+        <di:waypoint x="1840.0" y="420.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="BP1-XOR_JMPBB_RP1_TS1" id="BPMNEdge_7de97f9a-3cfb-4cd2-bb34-c6ca0dc368b1">
+        <di:waypoint x="1940.0" y="420.0"/>
+        <di:waypoint x="2020.0" y="420.0"/>
+        <di:waypoint x="2020.0" y="500.0"/>
+        <di:waypoint x="2120.0" y="500.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="TS1-XOR_JMPBB_RP1_TF1" id="BPMNEdge_a6c5386b-ef85-4457-9ce0-f82cf790bada">
+        <di:waypoint x="2440.0" y="440.0"/>
+        <di:waypoint x="2520.0" y="440.0"/>
+        <di:waypoint x="2520.0" y="480.0"/>
+        <di:waypoint x="2600.0" y="480.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="TF1-XOR_JMPBB_RP1_TMP1" id="BPMNEdge_75ba5688-4b90-49b1-b2fb-d5c0580a7435">
+        <di:waypoint x="2920.0" y="400.0"/>
+        <di:waypoint x="3000.0" y="400.0"/>
+        <di:waypoint x="3000.0" y="460.0"/>
+        <di:waypoint x="3100.0" y="460.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="TMP1-CFTP1" id="BPMNEdge_ce7c8d10-c212-41c7-8719-6e39ea4e765d">
+        <di:waypoint x="3420.0" y="380.0"/>
+        <di:waypoint x="3500.0" y="380.0"/>
+        <di:waypoint x="3500.0" y="420.0"/>
+        <di:waypoint x="3580.0" y="420.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="CFTP1-G0" id="BPMNEdge_1ddc50e1-671f-41a9-b223-3447a29d6c7a">
+        <di:waypoint x="3680.0" y="420.0"/>
+        <di:waypoint x="3760.0" y="420.0"/>
+        <di:waypoint x="3760.0" y="580.0"/>
+        <di:waypoint x="3860.0" y="580.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="G0-RP1" id="BPMNEdge_f6d7c15a-e5d1-4da4-8d7d-8314ad7b670b">
+        <di:waypoint x="3910.0" y="580.0"/>
+        <di:waypoint x="4080.0" y="580.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="G0-G1" id="BPMNEdge_ba773b1c-20bf-442e-82f9-3913d3070149">
+        <di:waypoint x="3910.0" y="600.0"/>
+        <di:waypoint x="4000.0" y="600.0"/>
+        <di:waypoint x="4000.0" y="780.0"/>
+        <di:waypoint x="4080.0" y="780.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="RP1-XOR_JMPAA_RP1" id="BPMNEdge_8b07f3d2-807c-4dff-bf37-338087662335">
+        <di:waypoint x="4180.0" y="580.0"/>
+        <di:waypoint x="4260.0" y="580.0"/>
+        <di:waypoint x="4260.0" y="620.0"/>
+        <di:waypoint x="4340.0" y="620.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="G1-APFD1" id="BPMNEdge_31acca5c-b757-460b-9ea6-6e0e6316dafa">
+        <di:waypoint x="4130.0" y="780.0"/>
+        <di:waypoint x="4220.0" y="780.0"/>
+        <di:waypoint x="4220.0" y="800.0"/>
+        <di:waypoint x="4340.0" y="800.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="G1-DP1" id="BPMNEdge_85a1f159-5c3e-436f-8696-291cca5d3716">
+        <di:waypoint x="4130.0" y="800.0"/>
+        <di:waypoint x="4240.0" y="800.0"/>
+        <di:waypoint x="4240.0" y="960.0"/>
+        <di:waypoint x="4340.0" y="960.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="APFD1-XORCLOSE17" id="BPMNEdge_cd7f557e-0836-4b5c-a59f-ec65213dcd22">
+        <di:waypoint x="4440.0" y="800.0"/>
+        <di:waypoint x="4620.0" y="800.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="DP1-XORCLOSE17" id="BPMNEdge_4a94bf94-5652-4b0e-8078-50cfb20f0fcd">
+        <di:waypoint x="4440.0" y="960.0"/>
+        <di:waypoint x="4520.0" y="960.0"/>
+        <di:waypoint x="4520.0" y="820.0"/>
+        <di:waypoint x="4620.0" y="820.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XORCLOSE17-XORCLOSE18" id="BPMNEdge_ca4552e9-a4ed-4533-9e91-1432521297f7">
+        <di:waypoint x="4670.0" y="800.0"/>
+        <di:waypoint x="4740.0" y="800.0"/>
+        <di:waypoint x="4740.0" y="660.0"/>
+        <di:waypoint x="4620.0" y="660.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XORCLOSE18-END" id="BPMNEdge_578d7959-42bf-4fed-8e13-e84317efdba3">
+        <di:waypoint x="4670.0" y="660.0"/>
+        <di:waypoint x="4740.0" y="660.0"/>
+        <di:waypoint x="4740.0" y="640.0"/>
+        <di:waypoint x="4840.0" y="640.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPAA_RP1-XORCLOSE18" id="BPMNEdge_29a519cc-d852-47b3-9fa4-bcf9a2061753">
+        <di:waypoint x="4390.0" y="620.0"/>
+        <di:waypoint x="4500.0" y="620.0"/>
+        <di:waypoint x="4500.0" y="680.0"/>
+        <di:waypoint x="4620.0" y="680.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TF1" id="BPMNEdge_0b90cb24-7d9a-466d-8702-668690fcb008">
+        <di:waypoint x="4390.0" y="620.0"/>
+        <di:waypoint x="4440.0" y="620.0"/>
+        <di:waypoint x="4440.0" y="1100.0"/>
+        <di:waypoint x="2560.0" y="1100.0"/>
+        <di:waypoint x="2560.0" y="500.0"/>
+        <di:waypoint x="2600.0" y="500.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TS1" id="BPMNEdge_6a12f979-9fa6-45f8-b909-50d5a6060344">
+        <di:waypoint x="4390.0" y="620.0"/>
+        <di:waypoint x="4440.0" y="620.0"/>
+        <di:waypoint x="4440.0" y="1200.0"/>
+        <di:waypoint x="2060.0" y="1200.0"/>
+        <di:waypoint x="2060.0" y="520.0"/>
+        <di:waypoint x="2120.0" y="520.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPAA_RP1-XOR_JMPBB_RP1_TMP1" id="BPMNEdge_87754bd7-2497-443a-bc7b-bd8a46892147">
+        <di:waypoint x="4390.0" y="640.0"/>
+        <di:waypoint x="4460.0" y="640.0"/>
+        <di:waypoint x="4460.0" y="1280.0"/>
+        <di:waypoint x="3020.0" y="1280.0"/>
+        <di:waypoint x="3020.0" y="480.0"/>
+        <di:waypoint x="3100.0" y="480.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPBB_RP1_TF1-TF1" id="BPMNEdge_15c92b95-88dd-4933-a6d2-5fc30a2e4798">
+        <di:waypoint x="2650.0" y="480.0"/>
+        <di:waypoint x="2720.0" y="480.0"/>
+        <di:waypoint x="2720.0" y="400.0"/>
+        <di:waypoint x="2820.0" y="400.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPBB_RP1_TS1-TS1" id="BPMNEdge_44970608-f82b-41da-a956-33f4343744dd">
+        <di:waypoint x="2170.0" y="500.0"/>
+        <di:waypoint x="2240.0" y="500.0"/>
+        <di:waypoint x="2240.0" y="440.0"/>
+        <di:waypoint x="2340.0" y="440.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="XOR_JMPBB_RP1_TMP1-TMP1" id="BPMNEdge_2163120f-a7d5-42c5-a66a-38a77248be38">
+        <di:waypoint x="3150.0" y="460.0"/>
+        <di:waypoint x="3220.0" y="460.0"/>
+        <di:waypoint x="3220.0" y="380.0"/>
+        <di:waypoint x="3320.0" y="380.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

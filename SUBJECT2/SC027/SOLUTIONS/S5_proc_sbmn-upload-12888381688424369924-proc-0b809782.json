@@ -1,0 +1,195 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "G0"
+      ]
+    },
+    {
+      "id": "G0",
+      "name": "G0",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "COO1",
+        "CPT1"
+      ]
+    },
+    {
+      "id": "COO1",
+      "name": "Customer places order online",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XORCLOSE3"
+      ]
+    },
+    {
+      "id": "CPT1",
+      "name": "Customer places order over the phone",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XORCLOSE3"
+      ]
+    },
+    {
+      "id": "XORCLOSE3",
+      "name": "XORCLOSE3",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "COO1",
+        "CPT1"
+      ],
+      "outComing": [
+        "GSC1"
+      ]
+    },
+    {
+      "id": "GSC1",
+      "name": "Generate and send order confirmation",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "XORCLOSE3"
+      ],
+      "outComing": [
+        "GSL1"
+      ]
+    },
+    {
+      "id": "GSL1",
+      "name": "Generate shipping label",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "GSC1"
+      ],
+      "outComing": [
+        "PPI1"
+      ]
+    },
+    {
+      "id": "PPI1",
+      "name": "Pick and pack items",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "GSL1"
+      ],
+      "outComing": [
+        "HOL1"
+      ]
+    },
+    {
+      "id": "HOL1",
+      "name": "Hand over order to logistics provider",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "PPI1"
+      ],
+      "outComing": [
+        "STC1"
+      ]
+    },
+    {
+      "id": "STC1",
+      "name": "Send tracking information to customer",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "HOL1"
+      ],
+      "outComing": [
+        "XOR_JMPBB_MSH1_MSH1"
+      ]
+    },
+    {
+      "id": "MSH1",
+      "name": "Monitor shipment",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "XOR_JMPBB_MSH1_MSH1"
+      ],
+      "outComing": [
+        "XOR_JMPAA_MSH1_MSH1"
+      ]
+    },
+    {
+      "id": "SDL1",
+      "name": "Successful delivery",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "XOR_JMPAA_MSH1_MSH1"
+      ],
+      "outComing": [
+        "PCF1"
+      ]
+    },
+    {
+      "id": "PCF1",
+      "name": "Process customer feedback or returns",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "SDL1"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.",
+      "inComing": [
+        "PCF1"
+      ],
+      "outComing": []
+    },
+    {
+      "id": "XOR_JMPAA_MSH1_MSH1",
+      "name": "XOR_JMPAA_Monitor shipment",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "MSH1"
+      ],
+      "outComing": [
+        "SDL1",
+        "XOR_JMPBB_MSH1_MSH1"
+      ]
+    },
+    {
+      "id": "XOR_JMPBB_MSH1_MSH1",
+      "name": "XOR_JMPBB_Monitor shipment",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "STC1",
+        "XOR_JMPAA_MSH1_MSH1"
+      ],
+      "outComing": [
+        "MSH1"
+      ]
+    }
+  ]
+}
