@@ -1,0 +1,283 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "CCIL1"
+      ]
+    },
+    {
+      "id": "CCIL1",
+      "name": "Check Current Inventory Level",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "G0"
+      ]
+    },
+    {
+      "id": "G0",
+      "name": "G0",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "CCIL1"
+      ],
+      "outComing": [
+        "CPO1",
+        "XORCLOSE4"
+      ]
+    },
+    {
+      "id": "CPO1",
+      "name": "Create Purchase Order",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XORCLOSE4"
+      ]
+    },
+    {
+      "id": "XORCLOSE4",
+      "name": "XORCLOSE4",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "CPO1",
+        "G0"
+      ],
+      "outComing": [
+        "XOR_JMPBB_RWPO1_RPO1"
+      ]
+    },
+    {
+      "id": "RPO1",
+      "name": "Review Purchase Order",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "XOR_JMPBB_RWPO1_RPO1"
+      ],
+      "outComing": [
+        "G1"
+      ]
+    },
+    {
+      "id": "G1",
+      "name": "G1",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "RPO1"
+      ],
+      "outComing": [
+        "APO1",
+        "RWPO1"
+      ]
+    },
+    {
+      "id": "RWPO1",
+      "name": "Rework Purchase Order",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "G1"
+      ],
+      "outComing": [
+        "XOR_JMPAA_RWPO1_RPO1"
+      ]
+    },
+    {
+      "id": "APO1",
+      "name": "Accept Purchase Order",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "G1"
+      ],
+      "outComing": [
+        "RPF1"
+      ]
+    },
+    {
+      "id": "RPF1",
+      "name": "Reserve Purchase Funds",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "APO1"
+      ],
+      "outComing": [
+        "SPOS1"
+      ]
+    },
+    {
+      "id": "SPOS1",
+      "name": "Send Purchase Order to Supplier",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "RPF1"
+      ],
+      "outComing": [
+        "Par11"
+      ]
+    },
+    {
+      "id": "Par11",
+      "name": "PAR",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "SPOS1"
+      ],
+      "outComing": [
+        "ROPS1",
+        "ROI1"
+      ]
+    },
+    {
+      "id": "ROPS1",
+      "name": "Receive Order Packing Slip",
+      "type": "TASK",
+      "branch": "0.0.0.1.1.1.",
+      "inComing": [
+        "Par11"
+      ],
+      "outComing": [
+        "ROPS2"
+      ]
+    },
+    {
+      "id": "ROI1",
+      "name": "Receive Order Invoice",
+      "type": "TASK",
+      "branch": "0.0.0.1.1.2.",
+      "inComing": [
+        "Par11"
+      ],
+      "outComing": [
+        "ROI2"
+      ]
+    },
+    {
+      "id": "ROPS2",
+      "name": "Record Order Packing Slip",
+      "type": "TASK",
+      "branch": "0.0.0.1.1.1.",
+      "inComing": [
+        "ROPS1"
+      ],
+      "outComing": [
+        "PARCLOSE16"
+      ]
+    },
+    {
+      "id": "ROI2",
+      "name": "Record Order Invoice",
+      "type": "TASK",
+      "branch": "0.0.0.1.1.2.",
+      "inComing": [
+        "ROI1"
+      ],
+      "outComing": [
+        "PARCLOSE16"
+      ]
+    },
+    {
+      "id": "PARCLOSE16",
+      "name": "PARCLOSE16",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.0.1.1.1.",
+      "inComing": [
+        "ROPS2",
+        "ROI2"
+      ],
+      "outComing": [
+        "RF1"
+      ]
+    },
+    {
+      "id": "RF1",
+      "name": "Release Funds",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "PARCLOSE16"
+      ],
+      "outComing": [
+        "IPS1"
+      ]
+    },
+    {
+      "id": "IPS1",
+      "name": "Issue Payment to Supplier",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "RF1"
+      ],
+      "outComing": [
+        "XORCLOSE19"
+      ]
+    },
+    {
+      "id": "XORCLOSE19",
+      "name": "XORCLOSE19",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "IPS1",
+        "XOR_JMPAA_RWPO1_RPO1"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XORCLOSE19"
+      ],
+      "outComing": []
+    },
+    {
+      "id": "XOR_JMPAA_RWPO1_RPO1",
+      "name": "XOR_JMPAA_Rework Purchase Order",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "RWPO1"
+      ],
+      "outComing": [
+        "XORCLOSE19",
+        "XOR_JMPBB_RWPO1_RPO1"
+      ]
+    },
+    {
+      "id": "XOR_JMPBB_RWPO1_RPO1",
+      "name": "XOR_JMPBB_Review Purchase Order",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "XORCLOSE4",
+        "XOR_JMPAA_RWPO1_RPO1"
+      ],
+      "outComing": [
+        "RPO1"
+      ]
+    }
+  ]
+}
