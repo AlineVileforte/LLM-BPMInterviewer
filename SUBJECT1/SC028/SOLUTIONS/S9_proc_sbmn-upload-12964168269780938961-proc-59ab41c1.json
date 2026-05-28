@@ -1,0 +1,283 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "Par0"
+      ]
+    },
+    {
+      "id": "Par0",
+      "name": "PAR",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "SDT1",
+        "PPD1"
+      ]
+    },
+    {
+      "id": "SDT1",
+      "name": "Select date and time",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "Par0"
+      ],
+      "outComing": [
+        "CST1"
+      ]
+    },
+    {
+      "id": "PPD1",
+      "name": "Provide payment details",
+      "type": "TASK",
+      "branch": "0.0.1.2.",
+      "inComing": [
+        "Par0"
+      ],
+      "outComing": [
+        "PARCLOSE11"
+      ]
+    },
+    {
+      "id": "CST1",
+      "name": "Customer searches for ticket",
+      "type": "TASK",
+      "branch": "0.0.1.1.2.1.",
+      "inComing": [
+        "SDT1"
+      ],
+      "outComing": [
+        "SR1"
+      ]
+    },
+    {
+      "id": "SR1",
+      "name": "Select route",
+      "type": "TASK",
+      "branch": "0.0.1.1.2.1.",
+      "inComing": [
+        "CST1"
+      ],
+      "outComing": [
+        "PPI1"
+      ]
+    },
+    {
+      "id": "PPI1",
+      "name": "Provide personal information",
+      "type": "TASK",
+      "branch": "0.0.1.1.",
+      "inComing": [
+        "SR1"
+      ],
+      "outComing": [
+        "PARCLOSE11"
+      ]
+    },
+    {
+      "id": "PARCLOSE11",
+      "name": "PARCLOSE11",
+      "type": "PARALLEL_GATEWAY",
+      "branch": "0.0.1.2.",
+      "inComing": [
+        "PPI1",
+        "PPD1"
+      ],
+      "outComing": [
+        "GT1"
+      ]
+    },
+    {
+      "id": "GT1",
+      "name": "Generate ticket",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "PARCLOSE11"
+      ],
+      "outComing": [
+        "USI1"
+      ]
+    },
+    {
+      "id": "USI1",
+      "name": "Update seat inventory",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "GT1"
+      ],
+      "outComing": [
+        "G0"
+      ]
+    },
+    {
+      "id": "G0",
+      "name": "G0",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "USI1"
+      ],
+      "outComing": [
+        "STEM1",
+        "STSMS1"
+      ]
+    },
+    {
+      "id": "STEM1",
+      "name": "Send ticket via email",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XORCLOSE21"
+      ]
+    },
+    {
+      "id": "STSMS1",
+      "name": "Send ticket via SMS",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XOR_JMPBB_SINS1_SINS1"
+      ]
+    },
+    {
+      "id": "SINS1",
+      "name": "Send instructions",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XOR_JMPBB_SINS1_SINS1"
+      ],
+      "outComing": [
+        "XOR_JMPAA_SINS1_SINS1"
+      ]
+    },
+    {
+      "id": "SRM1",
+      "name": "Send reminder",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XOR_JMPBB_SRM1_SRM1"
+      ],
+      "outComing": [
+        "XOR_JMPAA_SRM1_SRM1"
+      ]
+    },
+    {
+      "id": "CCJ1",
+      "name": "Customer completes journey",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XOR_JMPAA_SRM1_SRM1"
+      ],
+      "outComing": [
+        "PTF1"
+      ]
+    },
+    {
+      "id": "PTF1",
+      "name": "Post-travel feedback or services",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "CCJ1"
+      ],
+      "outComing": [
+        "XORCLOSE21"
+      ]
+    },
+    {
+      "id": "XORCLOSE21",
+      "name": "XORCLOSE21",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "STEM1",
+        "PTF1"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "XORCLOSE21"
+      ],
+      "outComing": []
+    },
+    {
+      "id": "XOR_JMPAA_SINS1_SINS1",
+      "name": "XOR_JMPAA_Send instructions",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "SINS1"
+      ],
+      "outComing": [
+        "XOR_JMPBB_SINS1_SINS1",
+        "XOR_JMPBB_SRM1_SRM1"
+      ]
+    },
+    {
+      "id": "XOR_JMPBB_SINS1_SINS1",
+      "name": "XOR_JMPBB_Send instructions",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "STSMS1",
+        "XOR_JMPAA_SINS1_SINS1"
+      ],
+      "outComing": [
+        "SINS1"
+      ]
+    },
+    {
+      "id": "XOR_JMPAA_SRM1_SRM1",
+      "name": "XOR_JMPAA_Send reminder",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "SRM1"
+      ],
+      "outComing": [
+        "CCJ1",
+        "XOR_JMPBB_SRM1_SRM1"
+      ]
+    },
+    {
+      "id": "XOR_JMPBB_SRM1_SRM1",
+      "name": "XOR_JMPBB_Send reminder",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "XOR_JMPAA_SINS1_SINS1",
+        "XOR_JMPAA_SRM1_SRM1"
+      ],
+      "outComing": [
+        "SRM1"
+      ]
+    }
+  ]
+}
